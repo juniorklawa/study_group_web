@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState } from "react";
 
-interface IUser {
+export interface IUser {
   id: string;
   name: string;
+  email: string;
   ra: string;
+  groupIds: number[];
 }
 
 interface IAuthContextData {

@@ -2,6 +2,7 @@ import React, { FormEvent, useState } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { Link, useHistory } from "react-router-dom";
 import logoImg from "../../assets/logo.png";
+import { useAuth } from "../../hooks/auth";
 import api from "../../services/api";
 import {
   Form,
@@ -18,6 +19,7 @@ const RegisterPage: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [ra, setRA] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setUser } = useAuth();
 
   async function handleRegister(
     event: FormEvent<HTMLFormElement>
@@ -48,8 +50,7 @@ const RegisterPage: React.FC = () => {
       setIsLoading(true);
       const response = await api.post("student/add", { name, email, ra });
       const user = response.data;
-
-      console.log("user", user);
+      setUser(user);
 
       history.push("/dashboard");
       setEmail("");

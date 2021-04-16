@@ -3,7 +3,7 @@ import { FiChevronLeft } from "react-icons/fi";
 import { Link, useRouteMatch } from "react-router-dom";
 import logoImg from "../../assets/logo.png";
 import api from "../../services/api";
-import { Header, RepositoryInfo, Notes } from "./styles";
+import { Header, Notes, NotesInfo } from "./styles";
 
 interface GroupParams {
   groupId: string;
@@ -62,7 +62,7 @@ const NotesPage: React.FC = () => {
         </Link>
       </Header>
       {group && (
-        <RepositoryInfo>
+        <NotesInfo>
           <header>
             <img
               src={`https://ui-avatars.com/api/?background=random&name=${group?.name}`}
@@ -73,12 +73,11 @@ const NotesPage: React.FC = () => {
               <p>{group?.name}</p>
             </div>
           </header>
-        </RepositoryInfo>
+        </NotesInfo>
       )}
       <Notes>
         {notes.map((note) => (
           <div>
- 
             <div>
               <strong>{note.title}</strong>
               <p>{note.description}</p>

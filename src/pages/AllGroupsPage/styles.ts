@@ -7,22 +7,6 @@ export const Title = styled.h1`
   line-height: 56px;
 `;
 
-export const MyGroups = styled.h1`
-  font-size: 32px;
-  color: #3a3a3a;
-  margin-top: 70px;
-  max-width: 450px;
-  line-height: 56px;
-`;
-
-export const EmptyGroups = styled.h1`
-  font-size: 24px;
-  color: #9E9E9E;
-  margin-top: 70px;
-  max-width: 450px;
-  line-height: 56px;
-`;
-
 export const Groups = styled.div`
   margin-top: 24px;
   max-width: 700px;

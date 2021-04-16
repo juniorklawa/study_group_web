@@ -1,3 +1,4 @@
+import { shade } from "polished";
 import styled from "styled-components";
 
 export const Header = styled.header`
@@ -19,8 +20,23 @@ export const Header = styled.header`
   }
 `;
 
-export const Issues = styled.div`
-  margin-top: 80px;
+export const SubscribeButton = styled.button`
+  width: 200px;
+  margin-top: 32px;
+  height: 50px;
+  background: #04d361;
+  border-radius: 5px;
+  border: 0;
+  color: #fff;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  &:hover {
+    background: ${shade(0.2, "#04d361")};
+  }
+`;
+
+export const Options = styled.div`
+  margin-top: 32px;
   div {
     margin-left: 16px;
     flex: 1;

@@ -23,8 +23,6 @@ const LoginPage: React.FC = () => {
       const response = await api.post(`auth`, { email });
       const user = response.data;
 
-      console.log("user", user);
-
       setUser(user);
 
       history.push("/dashboard");

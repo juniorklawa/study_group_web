@@ -56,7 +56,7 @@ export const Notes = styled.div`
   }
 `;
 
-export const RepositoryInfo = styled.section`
+export const NotesInfo = styled.section`
   margin-top: 80px;
   header {
     display: flex;

@@ -5,8 +5,9 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { MdOndemandVideo } from "react-icons/md";
 import { Link, useRouteMatch } from "react-router-dom";
 import logoImg from "../../assets/logo.png";
+import { IUser, useAuth } from "../../hooks/auth";
 import api from "../../services/api";
-import { Header, Issues, GroupInfo } from "./styles";
+import { GroupInfo, Header, Options, SubscribeButton } from "./styles";
 
 interface GroupParams {
   groupId: string;
@@ -18,7 +19,7 @@ interface IGroup {
   id: number;
   creatorId: number;
   whatsAppLink: string;
-  studentIds: number[];
+  studentEmails: string[];
   noteIds: number[];
   videoIds: number[];
 }
@@ -26,13 +27,13 @@ interface IGroup {
 const GroupPage: React.FC = () => {
   const [group, setGroup] = useState<IGroup | null>(null);
   const { params } = useRouteMatch<GroupParams>();
+  const { user, setUser } = useAuth();
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await api.get(`group/${params.groupId}`);
         const group = response.data;
-        console.log(group);
 
         setGroup(group);
       } catch (err) {
@@ -42,6 +43,31 @@ const GroupPage: React.FC = () => {
 
     fetchData();
   }, [params.groupId]);
+
+  const handleEnterGroup = async () => {
+    try {
+      await api.post("/group/user/enter", {
+        groupId: group?.id,
+        studentEmail: user.email,
+      });
+
+      const updatedUser = { ...user, groupIds: [...user?.groupIds, group?.id] };
+
+      const updatedGroup = {
+        ...group,
+        studentEmails: [...(group?.studentEmails as string[]), user.email],
+      };
+      setGroup(updatedGroup as IGroup);
+      setUser(updatedUser as IUser);
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  const checkUserSubscription = () => {
+    return group?.studentEmails.some((email) => email === user.email);
+  };
+
   return (
     <>
       <Header>
@@ -61,13 +87,19 @@ const GroupPage: React.FC = () => {
             <div>
               <strong>{group?.name}</strong>
               <p>{group?.subject}</p>
-              <p>{group?.studentIds.length + 1} participantes</p>
+              <p>{group?.studentEmails.length + 1} participantes</p>
             </div>
           </header>
+          <SubscribeButton
+            disabled={checkUserSubscription()}
+            onClick={async () => handleEnterGroup()}
+          >
+            {checkUserSubscription() ? "Já inscrito" : "Entrar"}
+          </SubscribeButton>
         </GroupInfo>
       )}
 
-      <Issues>
+      <Options>
         <Link to={`/notes/${group?.creatorId}`}>
           <CgNotes size={32} />
           <div>
@@ -84,7 +116,7 @@ const GroupPage: React.FC = () => {
           <FiChevronRight size={20} />
         </Link>
 
-        <a href={"https://chat.whatsapp.com/KntO7lh5A6wHq7YKlRkPPv"}>
+        <a href={group?.whatsAppLink}>
           <FaWhatsapp size={32} />
 
           <div>
@@ -92,7 +124,7 @@ const GroupPage: React.FC = () => {
           </div>
           <FiChevronRight size={20} />
         </a>
-      </Issues>
+      </Options>
     </>
   );
 };
