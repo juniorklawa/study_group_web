@@ -1,6 +1,10 @@
 import { shade } from "polished";
 import styled from "styled-components";
 
+interface ButtonProps {
+  isSubscribed: boolean;
+}
+
 export const Header = styled.header`
   display: flex;
   align-items: center;
@@ -24,7 +28,8 @@ export const SubscribeButton = styled.button`
   width: 200px;
   margin-top: 32px;
   height: 50px;
-  background: #04d361;
+  background: ${({ isSubscribed }: ButtonProps) =>
+    isSubscribed ? "#1976D2" : "#04d361"};
   border-radius: 5px;
   border: 0;
   color: #fff;

@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
           Todos os grupos
         </Link>
 
-        <Link to="/">
+        <Link to="/create-group">
           <AiOutlineUsergroupAdd color="#e53935" size={20} />
           Criar grupo
         </Link>

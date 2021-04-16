@@ -87,10 +87,15 @@ const GroupPage: React.FC = () => {
             <div>
               <strong>{group?.name}</strong>
               <p>{group?.subject}</p>
-              <p>{group?.studentEmails.length + 1} participantes</p>
+              <p>{`${group?.studentEmails.length} ${
+                group?.studentEmails.length === 1
+                  ? "participante"
+                  : "participantes"
+              }`}</p>
             </div>
           </header>
           <SubscribeButton
+            isSubscribed={!!checkUserSubscription()}
             disabled={checkUserSubscription()}
             onClick={async () => handleEnterGroup()}
           >
