@@ -1,3 +1,4 @@
+import { shade } from "polished";
 import styled from "styled-components";
 
 export const Header = styled.header`
@@ -19,6 +20,18 @@ export const Header = styled.header`
   }
 `;
 
+export const NoteContainer = styled.div`
+  background: #fff;
+  border-radius: 5px;
+  margin-top: 16px;
+  padding: 12px;
+  display: block;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+`;
+
 export const Notes = styled.div`
   margin-top: 80px;
   div {
@@ -34,22 +47,7 @@ export const Notes = styled.div`
       margin-top: 4px;
     }
   }
-  div {
-    background: #fff;
-    border-radius: 5px;
-    margin-top:16px;
-    width: 100%;
-    padding: 12px;
-    display: block;
-    text-decoration: none;
-    display: flex;
-    flex-direction:column;
-    transition: transform 0.2s;
-    & + a {
-      margin-top: 16px;
-    }
 
-  }
   svg {
     margin-left: auto;
     color: #cbcbd6;
@@ -98,5 +96,21 @@ export const NotesInfo = styled.section`
       margin-top: 4px;
       color: #6c6c80;
     }
+  }
+`;
+
+export const DeleteNoteButton = styled.button`
+  width: 130px;
+  margin-top: 16px;
+  height: 40px;
+  margin-left: 16px;
+  background: #d32f2f;
+  border-radius: 5px;
+  border: 0;
+  color: #fff;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  &:hover {
+    background: ${shade(0.2, "#d32f2f")};
   }
 `;

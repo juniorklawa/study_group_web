@@ -2,8 +2,15 @@ import React, { useEffect, useState } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { Link, useRouteMatch } from "react-router-dom";
 import logoImg from "../../assets/logo.png";
+import { useAuth } from "../../hooks/auth";
 import api from "../../services/api";
-import { Header, Notes, NotesInfo } from "./styles";
+import {
+  DeleteNoteButton,
+  Header,
+  NoteContainer,
+  Notes,
+  NotesInfo,
+} from "./styles";
 
 interface GroupParams {
   groupId: string;
@@ -27,7 +34,7 @@ interface IGroup {
   videoIds: number[];
 }
 
-interface INotes {
+interface INote {
   id: number;
   title: string;
   description: string;
@@ -37,7 +44,8 @@ interface INotes {
 
 const NotesPage: React.FC = () => {
   const [group, setGroup] = useState<IGroup | null>(null);
-  const [notes, setNotes] = useState<INotes[]>([]);
+  const [notes, setNotes] = useState<INote[]>([]);
+  const { user } = useAuth();
   const { params } = useRouteMatch<GroupParams>();
 
   useEffect(() => {
@@ -50,7 +58,9 @@ const NotesPage: React.FC = () => {
           `group/notes/list/${params.groupId}`
         );
 
-        setNotes(groupNotesResponse.data);
+        setNotes(
+          groupNotesResponse.data.filter((note: INote) => note !== null)
+        );
         setGroup(group);
       } catch (err) {
         console.error(err);
@@ -59,11 +69,24 @@ const NotesPage: React.FC = () => {
 
     fetchData();
   }, [params.groupId]);
+
+  const handleDeleteNote = async (noteId: number) => {
+    try {
+      await api.post("group/note/remove", { noteId });
+
+      const updatedNotes = notes.filter((note) => note.id !== noteId);
+
+      setNotes(updatedNotes);
+    } catch (err) {
+      alert(err);
+    }
+  };
+
   return (
     <>
       <Header>
         <img alt="logo" src={logoImg}></img>
-        <Link to={`/group/1`}>
+        <Link to={`/group/${group?.id}`}>
           <FiChevronLeft size={16} />
           Voltar
         </Link>
@@ -82,31 +105,47 @@ const NotesPage: React.FC = () => {
           </header>
         </NotesInfo>
       )}
-      <Notes>
-        {notes.map((note) => (
-          <div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <img
-                style={{ height: 64, width: 64, borderRadius: 32 }}
-                src={`https://ui-avatars.com/api/?background=random&name=${note.creator.name}`}
-                alt="logo"
-              ></img>
-              <p style={{ marginLeft: 8, marginTop: 16 }}>
-                {note.creator.name}
-              </p>
-            </div>
-            <div>
-              <strong>{note.title}</strong>
-              <p>{note.description}</p>
-            </div>
-          </div>
-        ))}
-      </Notes>
+
+      {notes.length ? (
+        <Notes>
+          {notes.map((note) => (
+            <NoteContainer>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                }}
+              >
+                <img
+                  style={{ height: 64, width: 64, borderRadius: 32 }}
+                  src={`https://ui-avatars.com/api/?background=random&name=${note?.creator.name}`}
+                  alt="logo"
+                ></img>
+                <p style={{ marginLeft: 8, marginTop: 16 }}>
+                  {note?.creator.name}
+                </p>
+              </div>
+
+              {user.email === note.creator.email && (
+                <DeleteNoteButton onClick={() => handleDeleteNote(note.id)}>
+                  Deletar nota
+                </DeleteNoteButton>
+              )}
+
+              <div style={{ marginTop: 16 }}>
+                <strong>{note?.title}</strong>
+                <p>{note?.description}</p>
+              </div>
+            </NoteContainer>
+          ))}
+        </Notes>
+      ) : (
+        <>
+          <h3 style={{ marginTop: 48, color: "#757575" }}>
+            Esse grupo ainda não tem nenhuma nota, que tal criar uma?
+          </h3>
+        </>
+      )}
     </>
   );
 };
