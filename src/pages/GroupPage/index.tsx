@@ -44,8 +44,32 @@ const GroupPage: React.FC = () => {
     fetchData();
   }, [params.groupId]);
 
-  const handleEnterGroup = async () => {
+  const handleOnGroupButtonPress = async () => {
     try {
+      if (checkUserSubscription()) {
+        console.log("oi");
+        await api.post("/group/user/exit", {
+          groupId: group?.id,
+          studentEmail: user.email,
+        });
+
+        const updatedUser = {
+          ...user,
+          groupIds: user.groupIds.filter((id) => id !== group?.id),
+        };
+
+        const updatedGroup = {
+          ...group,
+          studentEmails: group?.studentEmails.filter(
+            (email) => email !== user.email
+          ),
+        };
+        setGroup(updatedGroup as IGroup);
+        setUser(updatedUser as IUser);
+
+        return;
+      }
+
       await api.post("/group/user/enter", {
         groupId: group?.id,
         studentEmail: user.email,
@@ -96,10 +120,9 @@ const GroupPage: React.FC = () => {
           </header>
           <SubscribeButton
             isSubscribed={!!checkUserSubscription()}
-            disabled={checkUserSubscription()}
-            onClick={async () => handleEnterGroup()}
+            onClick={async () => handleOnGroupButtonPress()}
           >
-            {checkUserSubscription() ? "Já inscrito" : "Entrar"}
+            {checkUserSubscription() ? "Sair" : "Entrar"}
           </SubscribeButton>
         </GroupInfo>
       )}
