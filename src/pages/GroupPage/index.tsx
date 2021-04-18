@@ -105,7 +105,7 @@ const GroupPage: React.FC = () => {
       )}
 
       <Options>
-        <Link to={`/notes/${group?.creatorId}`}>
+        <Link to={`/notes/${group?.id}`}>
           <CgNotes size={32} />
           <div>
             <strong>Notas</strong>
@@ -113,7 +113,7 @@ const GroupPage: React.FC = () => {
           <FiChevronRight size={20} />
         </Link>
 
-        <Link to={`/videos`}>
+        <Link to={`/videos/${group?.id}`}>
           <MdOndemandVideo size={32} />
           <div>
             <strong>Vídeos</strong>

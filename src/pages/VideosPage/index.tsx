@@ -4,16 +4,17 @@ import { Link, useRouteMatch } from "react-router-dom";
 import logoImg from "../../assets/logo.png";
 import api from "../../services/api";
 import { Header, Notes, NotesInfo } from "./styles";
-
-interface GroupParams {
-  groupId: string;
-}
+import YouTube from "react-youtube";
 
 interface IStudent {
   id: number;
   name: string;
   email: string;
   ra: string;
+}
+
+interface GroupParams {
+  groupId: string;
 }
 
 interface IGroup {
@@ -27,7 +28,7 @@ interface IGroup {
   videoIds: number[];
 }
 
-interface INotes {
+interface IVideo {
   id: number;
   title: string;
   description: string;
@@ -35,9 +36,9 @@ interface INotes {
   creator: IStudent;
 }
 
-const NotesPage: React.FC = () => {
+const VideosPage: React.FC = () => {
   const [group, setGroup] = useState<IGroup | null>(null);
-  const [notes, setNotes] = useState<INotes[]>([]);
+  const [notes, setNotes] = useState<IVideo[]>([]);
   const { params } = useRouteMatch<GroupParams>();
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const NotesPage: React.FC = () => {
         const group = groupResponse.data;
 
         const groupNotesResponse = await api.get(
-          `group/notes/list/${params.groupId}`
+          `group/videos/list/${params.groupId}`
         );
 
         setNotes(groupNotesResponse.data);
@@ -76,33 +77,20 @@ const NotesPage: React.FC = () => {
               alt="logo"
             ></img>
             <div>
-              <strong>Notas</strong>
+              <strong>Vídeos</strong>
               <p>{group?.name}</p>
             </div>
           </header>
         </NotesInfo>
       )}
+
       <Notes>
         {notes.map((note) => (
           <div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-              }}
-            >
-              <img
-                style={{ height: 64, width: 64, borderRadius: 32 }}
-                src={`https://ui-avatars.com/api/?background=random&name=${note.creator.name}`}
-                alt="logo"
-              ></img>
-              <p style={{ marginLeft: 8, marginTop: 16 }}>
-                {note.creator.name}
-              </p>
-            </div>
             <div>
               <strong>{note.title}</strong>
               <p>{note.description}</p>
+              <YouTube videoId="dQw4w9WgXcQ" />
             </div>
           </div>
         ))}
@@ -111,4 +99,4 @@ const NotesPage: React.FC = () => {
   );
 };
 
-export default NotesPage;
+export default VideosPage;
