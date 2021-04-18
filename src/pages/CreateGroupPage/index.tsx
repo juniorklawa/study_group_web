@@ -99,7 +99,7 @@ const CreateGroupPage: React.FC = () => {
               placeholder="Digite o link"
             />
 
-            <SubmitButton type="submit">Criar conta</SubmitButton>
+            <SubmitButton type="submit">Criar grupo</SubmitButton>
           </Form>
         </>
       )}

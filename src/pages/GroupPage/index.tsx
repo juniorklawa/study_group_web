@@ -35,6 +35,8 @@ const GroupPage: React.FC = () => {
         const response = await api.get(`group/${params.groupId}`);
         const group = response.data;
 
+        console.log(group);
+
         setGroup(group);
       } catch (err) {
         console.error(err);
@@ -47,7 +49,6 @@ const GroupPage: React.FC = () => {
   const handleOnGroupButtonPress = async () => {
     try {
       if (checkUserSubscription()) {
-        console.log("oi");
         await api.post("/group/user/exit", {
           groupId: group?.id,
           studentEmail: user.email,
@@ -64,6 +65,7 @@ const GroupPage: React.FC = () => {
             (email) => email !== user.email
           ),
         };
+
         setGroup(updatedGroup as IGroup);
         setUser(updatedUser as IUser);
 

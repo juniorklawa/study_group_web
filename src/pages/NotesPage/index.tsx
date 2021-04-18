@@ -5,11 +5,14 @@ import logoImg from "../../assets/logo.png";
 import { useAuth } from "../../hooks/auth";
 import api from "../../services/api";
 import {
+  CreateNoteButton,
   DeleteNoteButton,
+  DescriptionInput,
   Header,
   NoteContainer,
   Notes,
   NotesInfo,
+  TitleInput,
 } from "./styles";
 
 interface GroupParams {
@@ -29,7 +32,7 @@ interface IGroup {
   id: number;
   creatorId: number;
   whatsAppLink: string;
-  studentIds: number[];
+  studentEmails: string[];
   noteIds: number[];
   videoIds: number[];
 }
@@ -38,7 +41,6 @@ interface INote {
   id: number;
   title: string;
   description: string;
-  creatorId: number;
   creator: IStudent;
 }
 
@@ -47,6 +49,9 @@ const NotesPage: React.FC = () => {
   const [notes, setNotes] = useState<INote[]>([]);
   const { user } = useAuth();
   const { params } = useRouteMatch<GroupParams>();
+
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
     async function fetchData() {
@@ -82,6 +87,36 @@ const NotesPage: React.FC = () => {
     }
   };
 
+  const handleCreateNote = async () => {
+    if (!title) {
+      alert("Sua nota precisa ter um titulo");
+      return;
+    }
+
+    if (!description) {
+      alert("Sua nota precisa ter uma descrição");
+    }
+
+    try {
+      const newNote = {
+        title,
+        description,
+        creatorEmail: user.email,
+        groupId: group?.id,
+      };
+
+      const { data } = await api.post("group/note/add", newNote);
+
+      const updatedNotes = [...notes, data] as INote[];
+
+      setNotes(updatedNotes);
+      setTitle("");
+      setDescription("");
+    } catch (err) {
+      alert(err);
+    }
+  };
+
   return (
     <>
       <Header>
@@ -91,6 +126,7 @@ const NotesPage: React.FC = () => {
           Voltar
         </Link>
       </Header>
+
       {group && (
         <NotesInfo>
           <header>
@@ -104,6 +140,32 @@ const NotesPage: React.FC = () => {
             </div>
           </header>
         </NotesInfo>
+      )}
+
+      {group?.studentEmails.some((email) => email === user.email) && (
+        <div style={{ padding: 16 }}>
+          <h1>Criar nota</h1>
+
+          <h2 style={{ marginTop: 16 }}>Título</h2>
+          <TitleInput
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            style={{ height: 40, width: "50%", padding: 8, marginTop: 16 }}
+            type="text"
+            id="lname"
+            name="lname"
+          ></TitleInput>
+          <h2 style={{ marginTop: 16 }}>Descrição</h2>
+          <DescriptionInput
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            name="Text1"
+          ></DescriptionInput>
+
+          <CreateNoteButton onClick={handleCreateNote}>
+            Criar nota
+          </CreateNoteButton>
+        </div>
       )}
 
       {notes.length ? (
