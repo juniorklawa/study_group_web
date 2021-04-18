@@ -102,7 +102,7 @@ const NotesPage: React.FC = () => {
         title,
         description,
         creatorEmail: user.email,
-        groupId: group?.id,
+        groupId: params.groupId,
       };
 
       const { data } = await api.post("group/note/add", newNote);
