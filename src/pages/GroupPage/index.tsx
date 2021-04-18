@@ -28,17 +28,20 @@ const GroupPage: React.FC = () => {
   const [group, setGroup] = useState<IGroup | null>(null);
   const { params } = useRouteMatch<GroupParams>();
   const { user, setUser } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
+        setIsLoading(true);
         const response = await api.get(`group/${params.groupId}`);
         const group = response.data;
-
 
         setGroup(group);
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -47,6 +50,7 @@ const GroupPage: React.FC = () => {
 
   const handleOnGroupButtonPress = async () => {
     try {
+      setIsLoading(true);
       if (checkUserSubscription()) {
         await api.post("/group/user/exit", {
           groupId: group?.id,
@@ -86,12 +90,18 @@ const GroupPage: React.FC = () => {
       setUser(updatedUser as IUser);
     } catch (err) {
       alert(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const checkUserSubscription = () => {
     return group?.studentEmails.some((email) => email === user.email);
   };
+
+  if (isLoading) {
+    return <h1>Carregando...</h1>;
+  }
 
   return (
     <>

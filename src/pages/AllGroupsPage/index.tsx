@@ -15,21 +15,29 @@ interface IGroup {
 
 const AllGroups: React.FC = () => {
   const [groups, setGroups] = useState<IGroup[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
       try {
+        setIsLoading(true);
         const response = await api.get(`group`);
         const groups = response.data;
 
         setGroups(groups);
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchData();
   }, []);
+
+  if (isLoading) {
+    return <h1>Carregando...</h1>;
+  }
 
   return (
     <>

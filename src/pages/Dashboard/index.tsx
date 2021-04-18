@@ -17,22 +17,30 @@ interface IGroup {
 
 const Dashboard: React.FC = () => {
   const [groups, setGroups] = useState<IGroup[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useAuth();
 
   useEffect(() => {
     async function fetchData() {
       try {
+        setIsLoading(true);
         for await (const groupId of user.groupIds) {
           const { data } = await api.get(`group/${groupId}`);
           setGroups((prevState) => [...prevState, data]);
         }
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchData();
   }, [user]);
+
+  if (isLoading) {
+    return <h1>Carregando...</h1>;
+  }
 
   return (
     <>

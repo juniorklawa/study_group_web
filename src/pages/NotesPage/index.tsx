@@ -49,12 +49,14 @@ const NotesPage: React.FC = () => {
   const [notes, setNotes] = useState<INote[]>([]);
   const { user } = useAuth();
   const { params } = useRouteMatch<GroupParams>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       try {
         const groupResponse = await api.get(`group/${params.groupId}`);
         const group = groupResponse.data;
@@ -72,6 +74,8 @@ const NotesPage: React.FC = () => {
         setGroup(group);
       } catch (err) {
         console.error(err);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -80,6 +84,7 @@ const NotesPage: React.FC = () => {
 
   const handleDeleteNote = async (noteId: number) => {
     try {
+      setIsLoading(true);
       await api.post("group/note/remove", { noteId });
 
       const updatedNotes = notes.filter((note) => note.id !== noteId);
@@ -87,6 +92,8 @@ const NotesPage: React.FC = () => {
       setNotes(updatedNotes);
     } catch (err) {
       alert(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -101,6 +108,7 @@ const NotesPage: React.FC = () => {
     }
 
     try {
+      setIsLoading(true);
       const newNote = {
         title,
         description,
@@ -117,8 +125,14 @@ const NotesPage: React.FC = () => {
       setDescription("");
     } catch (err) {
       alert(err);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return <h1>Carregando...</h1>;
+  }
 
   return (
     <>
