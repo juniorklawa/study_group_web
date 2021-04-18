@@ -52,7 +52,7 @@ const AllGroups: React.FC = () => {
         </Link>
       </Header>
 
-      <Title>Todos os groups</Title>
+      <Title>Todos os grupos</Title>
 
       <Groups>
         {groups.map((repository) => (

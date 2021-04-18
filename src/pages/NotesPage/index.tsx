@@ -63,9 +63,12 @@ const NotesPage: React.FC = () => {
           `group/notes/list/${params.groupId}`
         );
 
-        setNotes(
-          groupNotesResponse.data.filter((note: INote) => note !== null)
-        );
+        if (groupNotesResponse.data) {
+          setNotes(
+            groupNotesResponse.data.filter((note: INote) => note !== null)
+          );
+        }
+
         setGroup(group);
       } catch (err) {
         console.error(err);
@@ -121,7 +124,7 @@ const NotesPage: React.FC = () => {
     <>
       <Header>
         <img alt="logo" src={logoImg}></img>
-        <Link to={`/group/${group?.id}`}>
+        <Link to={`/group/${params.groupId}`}>
           <FiChevronLeft size={16} />
           Voltar
         </Link>
@@ -142,67 +145,79 @@ const NotesPage: React.FC = () => {
         </NotesInfo>
       )}
 
-      <div style={{ padding: 16 }}>
-        <h1>Criar nota</h1>
+      {group?.studentEmails.some((email) => email === user.email) && (
+        <div style={{ padding: 16 }}>
+          <h1>Criar nota</h1>
 
-        <h2 style={{ marginTop: 16 }}>Título</h2>
-        <TitleInput
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          style={{ height: 40, width: "50%", padding: 8, marginTop: 16 }}
-          type="text"
-          id="lname"
-          name="lname"
-        ></TitleInput>
-        <h2 style={{ marginTop: 16 }}>Descrição</h2>
-        <DescriptionInput
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          name="Text1"
-        ></DescriptionInput>
+          <h2 style={{ marginTop: 16 }}>Título</h2>
+          <TitleInput
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            style={{ height: 40, width: "50%", padding: 8, marginTop: 16 }}
+            type="text"
+            id="lname"
+            name="lname"
+          ></TitleInput>
+          <h2 style={{ marginTop: 16 }}>Descrição</h2>
+          <DescriptionInput
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            name="Text1"
+          ></DescriptionInput>
 
-        <CreateNoteButton onClick={handleCreateNote}>
-          Criar nota
-        </CreateNoteButton>
-      </div>
+          <CreateNoteButton onClick={handleCreateNote}>
+            Criar nota
+          </CreateNoteButton>
+        </div>
+      )}
 
-      {notes.length ? (
-        <Notes>
-          {notes.map((note) => (
-            <NoteContainer key={note.id}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                }}
-              >
-                <img
-                  style={{ height: 64, width: 64, borderRadius: 32 }}
-                  src={`https://ui-avatars.com/api/?background=random&name=${note?.creator.name}`}
-                  alt="logo"
-                ></img>
-                <p style={{ marginLeft: 8, marginTop: 16 }}>
-                  {note?.creator.name}
-                </p>
-              </div>
+      {group?.studentEmails.some((email) => email === user.email) ? (
+        <>
+          {notes.length ? (
+            <Notes>
+              {notes.map((note) => (
+                <NoteContainer key={note.id}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <img
+                      style={{ height: 64, width: 64, borderRadius: 32 }}
+                      src={`https://ui-avatars.com/api/?background=random&name=${note?.creator.name}`}
+                      alt="logo"
+                    ></img>
+                    <p style={{ marginLeft: 8, marginTop: 16 }}>
+                      {note?.creator.name}
+                    </p>
+                  </div>
 
-              {user.email === note.creator.email && (
-                <DeleteNoteButton onClick={() => handleDeleteNote(note.id)}>
-                  Deletar nota
-                </DeleteNoteButton>
-              )}
+                  {user.email === note.creator.email && (
+                    <DeleteNoteButton onClick={() => handleDeleteNote(note.id)}>
+                      Deletar nota
+                    </DeleteNoteButton>
+                  )}
 
-              <div style={{ marginTop: 16 }}>
-                <strong>{note?.title}</strong>
-                <p>{note?.description}</p>
-              </div>
-            </NoteContainer>
-          ))}
-        </Notes>
+                  <div style={{ marginTop: 16 }}>
+                    <strong>{note?.title}</strong>
+                    <p>{note?.description}</p>
+                  </div>
+                </NoteContainer>
+              ))}
+            </Notes>
+          ) : (
+            <>
+              <h3 style={{ marginTop: 48, color: "#757575" }}>
+                Esse grupo ainda não tem nenhuma nota, que tal criar uma?
+              </h3>
+            </>
+          )}
+        </>
       ) : (
         <>
           <h3 style={{ marginTop: 48, color: "#757575" }}>
-            Esse grupo ainda não tem nenhuma nota, que tal criar uma?
+            Você precisa entrar no grupo para criar e ver as notas!
           </h3>
         </>
       )}
