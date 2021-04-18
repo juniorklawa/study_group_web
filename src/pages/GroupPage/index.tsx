@@ -35,7 +35,6 @@ const GroupPage: React.FC = () => {
         const response = await api.get(`group/${params.groupId}`);
         const group = response.data;
 
-        console.log(group);
 
         setGroup(group);
       } catch (err) {

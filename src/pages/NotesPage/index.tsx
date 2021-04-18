@@ -142,31 +142,29 @@ const NotesPage: React.FC = () => {
         </NotesInfo>
       )}
 
-      {group?.studentEmails.some((email) => email === user.email) && (
-        <div style={{ padding: 16 }}>
-          <h1>Criar nota</h1>
+      <div style={{ padding: 16 }}>
+        <h1>Criar nota</h1>
 
-          <h2 style={{ marginTop: 16 }}>Título</h2>
-          <TitleInput
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            style={{ height: 40, width: "50%", padding: 8, marginTop: 16 }}
-            type="text"
-            id="lname"
-            name="lname"
-          ></TitleInput>
-          <h2 style={{ marginTop: 16 }}>Descrição</h2>
-          <DescriptionInput
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            name="Text1"
-          ></DescriptionInput>
+        <h2 style={{ marginTop: 16 }}>Título</h2>
+        <TitleInput
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          style={{ height: 40, width: "50%", padding: 8, marginTop: 16 }}
+          type="text"
+          id="lname"
+          name="lname"
+        ></TitleInput>
+        <h2 style={{ marginTop: 16 }}>Descrição</h2>
+        <DescriptionInput
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          name="Text1"
+        ></DescriptionInput>
 
-          <CreateNoteButton onClick={handleCreateNote}>
-            Criar nota
-          </CreateNoteButton>
-        </div>
-      )}
+        <CreateNoteButton onClick={handleCreateNote}>
+          Criar nota
+        </CreateNoteButton>
+      </div>
 
       {notes.length ? (
         <Notes>
