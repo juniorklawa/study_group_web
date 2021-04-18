@@ -109,7 +109,7 @@ const NotesPage: React.FC = () => {
       {notes.length ? (
         <Notes>
           {notes.map((note) => (
-            <NoteContainer>
+            <NoteContainer key={note.id}>
               <div
                 style={{
                   display: "flex",
