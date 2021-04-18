@@ -60,48 +60,47 @@ const RegisterPage: React.FC = () => {
       setIsLoading(false);
     }
   }
+
+  if (isLoading) {
+    return <h1>Carregando...</h1>;
+  }
+
   return (
     <>
-      {isLoading ? (
-        <Title>Carregando...</Title>
-      ) : (
-        <>
-          <Header>
-            <img alt="logo" src={logoImg}></img>
-            <Link to="/dashboard">
-              <FiChevronLeft size={16} />
-              Voltar
-            </Link>
-          </Header>
+      <Header>
+        <img alt="logo" src={logoImg}></img>
+        <Link to="/dashboard">
+          <FiChevronLeft size={16} />
+          Voltar
+        </Link>
+      </Header>
 
-          <Title>Registrar-se</Title>
+      <Title>Registrar-se</Title>
 
-          <Form onSubmit={handleRegister}>
-            <InputTitle>Nome</InputTitle>
-            <RegisterInput
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Digite seu nome"
-            />
+      <Form onSubmit={handleRegister}>
+        <InputTitle>Nome</InputTitle>
+        <RegisterInput
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Digite seu nome"
+        />
 
-            <InputTitle>E-mail</InputTitle>
-            <RegisterInput
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Digite seu e-mail"
-            />
+        <InputTitle>E-mail</InputTitle>
+        <RegisterInput
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Digite seu e-mail"
+        />
 
-            <InputTitle>RA</InputTitle>
-            <RegisterInput
-              value={ra}
-              onChange={(e) => setRA(e.target.value)}
-              placeholder="Digite seu RA"
-            />
+        <InputTitle>RA</InputTitle>
+        <RegisterInput
+          value={ra}
+          onChange={(e) => setRA(e.target.value)}
+          placeholder="Digite seu RA"
+        />
 
-            <SubmitButton type="submit">Criar conta</SubmitButton>
-          </Form>
-        </>
-      )}
+        <SubmitButton type="submit">Criar conta</SubmitButton>
+      </Form>
     </>
   );
 };

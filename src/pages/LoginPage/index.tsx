@@ -9,6 +9,7 @@ const LoginPage: React.FC = () => {
   const history = useHistory();
   const [email, setEmail] = useState("");
   const [inputError, setInputError] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setUser } = useAuth();
 
   async function handleLogin(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -20,6 +21,7 @@ const LoginPage: React.FC = () => {
     }
 
     try {
+      setIsLoading(true);
       const response = await api.post(`auth`, { email });
       const user = response.data;
 
@@ -30,8 +32,15 @@ const LoginPage: React.FC = () => {
       setInputError("");
     } catch (err) {
       setInputError("Esse e-mail não está cadastrado");
+    } finally {
+      setIsLoading(false);
     }
   }
+
+  if (isLoading) {
+    return <h1>Carregando...</h1>;
+  }
+
   return (
     <>
       <img src={logoImg} alt="Easy Meet Logo" />
