@@ -2,7 +2,7 @@ import { shade } from "polished";
 import styled from "styled-components";
 
 interface ButtonProps {
-  isSubscribed: boolean;
+  isSubscribed?: boolean;
 }
 
 export const Header = styled.header`

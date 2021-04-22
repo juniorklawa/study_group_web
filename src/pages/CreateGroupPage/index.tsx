@@ -21,7 +21,7 @@ const CreateGroupPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user, setUser } = useAuth();
 
-  async function handleRegister(
+  async function handleCreateGroup(
     event: FormEvent<HTMLFormElement>
   ): Promise<void> {
     event.preventDefault();
@@ -52,6 +52,8 @@ const CreateGroupPage: React.FC = () => {
       const group = response.data;
 
       const updatedUser = { ...user, groupIds: [...user?.groupIds, group?.id] };
+
+      console.log(updatedUser);
       setUser(updatedUser as IUser);
       history.push(`group/${group.id}`);
     } catch (err) {
@@ -77,7 +79,7 @@ const CreateGroupPage: React.FC = () => {
 
           <Title>Criar grupo</Title>
 
-          <Form onSubmit={handleRegister}>
+          <Form onSubmit={handleCreateGroup}>
             <InputTitle>Nome do grupo</InputTitle>
             <RegisterInput
               value={groupName}

@@ -3,7 +3,7 @@ import { CgNotes } from "react-icons/cg";
 import { FaWhatsapp } from "react-icons/fa";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { MdOndemandVideo } from "react-icons/md";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import logoImg from "../../assets/logo.png";
 import { IUser, useAuth } from "../../hooks/auth";
 import api from "../../services/api";
@@ -17,7 +17,7 @@ interface IGroup {
   name: string;
   subject: string;
   id: number;
-  creatorId: number;
+  creatorEmail: string;
   whatsAppLink: string;
   studentEmails: string[];
   noteIds: number[];
@@ -28,6 +28,7 @@ const GroupPage: React.FC = () => {
   const [group, setGroup] = useState<IGroup | null>(null);
   const { params } = useRouteMatch<GroupParams>();
   const { user, setUser } = useAuth();
+  const history = useHistory();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -95,6 +96,21 @@ const GroupPage: React.FC = () => {
     }
   };
 
+  const handleDeleteGroup = async () => {
+    try {
+      setIsLoading(true);
+      await api.post("/group/remove", {
+        groupId: group?.id,
+      });
+
+      history.push("/dashboard");
+    } catch (err) {
+      alert(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const checkUserSubscription = () => {
     return group?.studentEmails.some((email) => email === user.email);
   };
@@ -129,12 +145,23 @@ const GroupPage: React.FC = () => {
               }`}</p>
             </div>
           </header>
-          <SubscribeButton
-            isSubscribed={!!checkUserSubscription()}
-            onClick={async () => handleOnGroupButtonPress()}
-          >
-            {checkUserSubscription() ? "Sair" : "Entrar"}
-          </SubscribeButton>
+
+          {group.creatorEmail === user.email ? (
+            <>
+              <SubscribeButton onClick={async () => handleDeleteGroup()}>
+                Deletar grupo
+              </SubscribeButton>
+            </>
+          ) : (
+            <>
+              <SubscribeButton
+                isSubscribed={!!checkUserSubscription()}
+                onClick={async () => handleOnGroupButtonPress()}
+              >
+                {checkUserSubscription() ? "Sair" : "Entrar"}
+              </SubscribeButton>
+            </>
+          )}
         </GroupInfo>
       )}
 

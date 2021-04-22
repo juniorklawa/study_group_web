@@ -26,7 +26,9 @@ const Dashboard: React.FC = () => {
         setIsLoading(true);
         for await (const groupId of user.groupIds) {
           const { data } = await api.get(`group/${groupId}`);
-          setGroups((prevState) => [...prevState, data]);
+          if (data !== null) {
+            setGroups((prevState) => [...prevState, data]);
+          }
         }
       } catch (err) {
         console.error(err);
