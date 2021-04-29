@@ -85,7 +85,7 @@ const NotesPage: React.FC = () => {
   const handleDeleteNote = async (noteId: number) => {
     try {
       setIsLoading(true);
-      await api.post("group/note/remove", { noteId });
+      await api.post("group/note/remove", { noteId, groupId: group?.id });
 
       const updatedNotes = notes.filter((note) => note.id !== noteId);
 

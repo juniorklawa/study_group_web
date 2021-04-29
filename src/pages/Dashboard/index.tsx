@@ -24,9 +24,10 @@ const Dashboard: React.FC = () => {
     async function fetchData() {
       try {
         setIsLoading(true);
+
         for await (const groupId of user.groupIds) {
           const { data } = await api.get(`group/${groupId}`);
-          if (data !== null) {
+          if (data !== null && data.id !== 'null') {
             setGroups((prevState) => [...prevState, data]);
           }
         }

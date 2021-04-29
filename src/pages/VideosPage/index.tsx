@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { Link, useRouteMatch } from "react-router-dom";
+import YouTube from "react-youtube";
 import logoImg from "../../assets/logo.png";
 import { useAuth } from "../../hooks/auth";
-import YouTube from "react-youtube";
 import api from "../../services/api";
 import {
   CreateNoteButton,
@@ -82,10 +82,13 @@ const VideosPage: React.FC = () => {
     fetchData();
   }, [params.groupId]);
 
-  const handleDeleteNote = async (videoId: number) => {
+  const handleDeleteVideo = async (videoId: number) => {
     try {
       setIsLoading(true);
-      await api.post("group/video/remove", { videoId });
+      await api.post("group/video/remove", {
+        videoId,
+        groupId: group?.id,
+      });
 
       const updatedVideos = videos.filter((video) => video.id !== videoId);
 
@@ -211,7 +214,7 @@ const VideosPage: React.FC = () => {
 
                   {user.email === video.creator.email && (
                     <DeleteNoteButton
-                      onClick={() => handleDeleteNote(video.id)}
+                      onClick={() => handleDeleteVideo(video.id)}
                     >
                       Deletar vídeo
                     </DeleteNoteButton>
